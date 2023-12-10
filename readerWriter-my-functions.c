@@ -7,6 +7,8 @@
 #define NUM_WRITERS 640
 #define NUM_READERS 2560
 
+//2.5 readerWriter 
+
 static int wc = 0, rc = 0; // initializing writer and reader count
 static int read_n;
 static int write_n;
@@ -41,6 +43,7 @@ void *writer(void *arg) {
     }
     return NULL;
 }
+
 
 void *reader(void *read) {
     for (int i = 0; i < read_n; i++) {
