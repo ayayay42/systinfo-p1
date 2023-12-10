@@ -5,7 +5,7 @@ make
 
 rm -f perf_measures.csv || true
 
-program_names=("readerWriter-my-functions" "readerWriter")
+program_names=("readerWriter-my-functions" "readerWriter") #TODO: ajouter tous les fichiers à exécuter .c
 
 
 num_threads=(2 4 8 16 32 64)
