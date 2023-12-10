@@ -30,7 +30,7 @@ void *writer(void *arg) {
         pthread_mutex_unlock(&z);
 
         // Write to the database
-        for (int i = 0; i < 100000; i++); //100 000 steps
+        for (int i = 0; i < 10000; i++); //100 000 steps
 
         pthread_mutex_lock(&mwc);
         wc--;
@@ -54,7 +54,7 @@ void *reader(void *read) {
         pthread_mutex_unlock(&mrc);
         sem_post(&rsem);
         pthread_mutex_unlock(&z);
-        for (int i = 0; i < 100000; i++); //100 000 steps
+        for (int i = 0; i < 10000; i++); //100 000 steps
         pthread_mutex_lock(&mrc);
         rc--;
         if (rc == 0) {

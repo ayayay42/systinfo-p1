@@ -32,7 +32,7 @@ void *writer(void *arg) {
         sem_post_function(&wsem);
         unlock_function(&z);
         // Write to the database
-        for (int i = 0; i < 1000000; i++); //1 000 000 steps
+        for (int i = 0; i < 10000; i++); //1 000 000 steps
 
         test_and_test_and_set_lock_function(&mwc);
         wc--;
@@ -57,7 +57,7 @@ void *reader(void *read) {
         unlock_function(&mrc);
         sem_post_function(&rsem);
         unlock_function(&z);
-        for (int i = 0; i < 1000000; i++); //1 000 000 steps
+        for (int i = 0; i < 10000; i++); //1 000 000 steps
         test_and_test_and_set_lock_function(&mrc);
         rc--;
         if (rc == 0) {
