@@ -24,7 +24,17 @@ void test_and_set(my_Lock* my_lock){
 }
 
 void test_and_test_and_set_lock_function(my_Lock* my_lock){
-	// TODO
+	int flag = 1;
+	while (flag){
+		if (my_lock->lock == 1){
+			continue;
+		}
+		asm volatile(
+			"xchg %0, %1"
+			: "=r" (flag)
+			: "m" (my_lock->lock), "0" (flag)
+			: "memory");
+	}
 }
 
 void* init_function(my_Lock *my_lock_ptr){
