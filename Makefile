@@ -1,17 +1,17 @@
 CC = gcc
 CFLAGS = -Wall -Werror 
 
-SRC = $(wildcard *.c)
-OUT = $(SRC:%.c=bin/%)
+SRC = $(wildcard src/*.c)
+OUT = $(SRC:src/%.c=bin/%)
 SRIPTS = $(wildcard *.sh)
 CSV = $(wildcard *.csv)
 
 all: $(OUT) $(SRIPTS)
 
-bin/%: %.c
+bin/%: src/%.c
 	$(CC) $(CFLAGS) -g -o $@ $< -lpthread
 
 clean:
-	rm -f $(OUT) $(CSV)
+	rm -r $(OUT) $(CSV)
 
 .PHONY: clean
