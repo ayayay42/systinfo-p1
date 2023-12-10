@@ -27,7 +27,7 @@ void *writer(void *arg) {
 
         sem_wait(&wsem);
         // Write to the database
-        for (int i = 0; i < 10000; i++);
+        for (int i = 0; i < 100000; i++); //10 000 steps
         sem_post(&wsem);
 
         pthread_mutex_lock(&mwc);
@@ -52,7 +52,7 @@ void *reader(void *read) {
         pthread_mutex_unlock(&mrc);
         sem_post(&rsem);
         pthread_mutex_unlock(&z);
-        for (int i = 0; i < 10000; i++);
+        for (int i = 0; i < 100000; i++); //10 000 steps
         pthread_mutex_lock(&mrc);
         rc--;
         if (rc == 0) {
@@ -66,16 +66,16 @@ void *reader(void *read) {
 int main(int argc, char *argv[]) {
     int read_n_th, write_n_th;
 
-    if (argc != 2) {
+    if (argc != 3) {
         printf("Insufficient arguments\n");
         return -1;
     }
 
     // TODO check arguments AUB
 
-    int nbr_threads = atoi(argv[1]);
-    read_n_th = nbr_threads / 2;
-    write_n_th = nbr_threads - read_n_th;
+    //int nbr_threads = atoi(argv[1]);
+    write_n_th = atoi(argv[1]);
+    read_n_th = atoi(argv[2]);
 
     pthread_t* const thread_readers = calloc(read_n_th, sizeof *thread_readers);
     pthread_t* const thread_writers = calloc(write_n_th, sizeof *thread_writers);
