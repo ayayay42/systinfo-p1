@@ -5,12 +5,12 @@ make
 
 rm -f perf_measures.csv || true
 
-program_names=("readerWriter-my-functions" "readerWriter") #TODO: ajouter tous les fichiers à exécuter .c
+program_names=("philosophes" "philosophes-my-functions" "philo-tatas" "producerConsumer" "producerConsumer-my-functions" "prodCons-tatas" "readerWriter" "readerWriter-my-functions" "readerWriter-tatas" "lock_test_and_set" "lock_tatas") #TODO: ajouter tous les fichiers à exécuter .c
 
 
 num_threads=(2 4 8 16 32 64)
 
-num_mesures=$(seq 5)
+num_mesures=$(seq 2)
 
 echo "program,num_threads,num_mesures,time" > perf_measures.csv
 
