@@ -8,7 +8,8 @@ except ModuleNotFoundError:
 else:
     sns.set()
 
-program_names = ["philosophes", "test-and-set"] #noms des programmes à évaluer
+#program_names = ["philosophes", "philosophes-my-functions", "thread_test"] #noms des programmes à évaluer
+program_names = ["readerWriter"] #noms des programmes à évaluer
 df = pd.read_csv("perf_measures.csv")
 #df["time"] *= 1000 #in ms 
 

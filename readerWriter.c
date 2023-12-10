@@ -27,7 +27,7 @@ void *writer(void *arg) {
 
         sem_wait(&wsem);
         // Write to the database
-        for (int i = 0; i < 100000; i++); //10 000 steps
+        for (int i = 0; i < 100000; i++); //100 000 steps
         sem_post(&wsem);
 
         pthread_mutex_lock(&mwc);
@@ -52,7 +52,7 @@ void *reader(void *read) {
         pthread_mutex_unlock(&mrc);
         sem_post(&rsem);
         pthread_mutex_unlock(&z);
-        for (int i = 0; i < 100000; i++); //10 000 steps
+        for (int i = 0; i < 100000; i++); //100 000 steps
         pthread_mutex_lock(&mrc);
         rc--;
         if (rc == 0) {
