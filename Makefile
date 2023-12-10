@@ -10,7 +10,7 @@ SRC = philosophes.c philosophes-my-functions.c thread_test.c readerWriter.c
 all: $(OUT) $(SRIPTS)
 
 bin/%: %.c
-	$(CC) $(CFLAGS) -o $@ $< -lpthread
+	$(CC) $(CFLAGS) -g -o $@ $< -lpthread
 
 clean:
 	rm -f $(OUT) $(CSV)

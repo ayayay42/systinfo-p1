@@ -6,15 +6,15 @@
 #define NUM_WRITERS 640
 #define NUM_READERS 2560
 
-int wc = 0, rc = 0; // initializing writer and reader count
-int read_n;
-int write_n;
+static int wc = 0, rc = 0; // initializing writer and reader count
+static int read_n;
+static int write_n;
 
-pthread_mutex_t mwc; // mwc is mutex writer count
-pthread_mutex_t mrc; // mrc is mutex reader count
-pthread_mutex_t z;
+static pthread_mutex_t mwc; // mwc is mutex writer count
+static pthread_mutex_t mrc; // mrc is mutex reader count
+static pthread_mutex_t z;
 
-sem_t wsem, rsem; // writer and reader semaphore
+static sem_t wsem, rsem; // writer and reader semaphore
 
 void *writer(void *arg) {
     for (int i = 0; i < write_n; i++) {
@@ -71,11 +71,14 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    // TODO check arguments AUB
+
     int nbr_threads = atoi(argv[1]);
     read_n_th = nbr_threads / 2;
     write_n_th = nbr_threads - read_n_th;
 
-    pthread_t thread_readers[read_n_th], thread_writers[write_n_th];
+    pthread_t* const thread_readers = calloc(read_n_th, sizeof *thread_readers);
+    pthread_t* const thread_writers = calloc(write_n_th, sizeof *thread_writers);
 
     // Initialize mutex and semaphores
     if (pthread_mutex_init(&mrc, NULL) != 0) {printf("Error creating the reader mutex\n");}
@@ -86,7 +89,7 @@ int main(int argc, char *argv[]) {
 
     // Create threads for readers
     read_n = NUM_READERS/read_n_th;
-    for (int i = 0; i < read_n; i++) {
+    for (int i = 0; i < read_n_th; i++) {
         if (pthread_create(&thread_readers[i], NULL, reader, NULL) != 0) {
             printf("Error creating reader thread\n");
         }
@@ -94,20 +97,20 @@ int main(int argc, char *argv[]) {
 
     // Create threads for writers
     write_n = NUM_WRITERS/write_n_th;
-    for (int i = 0; i < write_n; i++) {
+    for (int i = 0; i < write_n_th; i++) {
         if (pthread_create(&thread_writers[i], NULL, writer, NULL) != 0) {
             printf("Error creating writer thread\n");
         }
     }
 
     // Join threads
-    for (int i = 0; i < read_n; i++) {
+    for (int i = 0; i < read_n_th; i++) {
         if (pthread_join(thread_readers[i], NULL) != 0) {
             printf("Error joining reader thread\n");
         }
     }
 
-    for (int i = 0; i < write_n; i++) {
+    for (int i = 0; i < write_n_th; i++) {
         if (pthread_join(thread_writers[i], NULL) != 0) {
             printf("Error joining writer thread\n");
         }
@@ -119,6 +122,9 @@ int main(int argc, char *argv[]) {
 
     if (sem_destroy(&rsem) != 0) {printf("Error destroying the reader semaphore\n");}
     if (sem_destroy(&wsem) != 0) {printf("Error destroying the writer semaphore\n");}
+
+    free(thread_readers);
+    free(thread_writers);
 
     return (EXIT_SUCCESS);
 }
