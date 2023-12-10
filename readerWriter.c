@@ -18,17 +18,19 @@ static sem_t wsem, rsem; // writer and reader semaphore
 
 void *writer(void *arg) {
     for (int i = 0; i < write_n; i++) {
+        pthread_mutex_lock(&z);
+        sem_wait(&wsem);
         pthread_mutex_lock(&mwc);
         wc++;
         if (wc == 1) {
             sem_wait(&rsem);
         }
         pthread_mutex_unlock(&mwc);
+        sem_post(&wsem);
+        pthread_mutex_unlock(&z);
 
-        sem_wait(&wsem);
         // Write to the database
         for (int i = 0; i < 100000; i++); //100 000 steps
-        sem_post(&wsem);
 
         pthread_mutex_lock(&mwc);
         wc--;
@@ -72,6 +74,17 @@ int main(int argc, char *argv[]) {
     }
 
     // TODO check arguments AUB
+
+    for (int i = 1; i < argc; i++)
+	{
+		char *endptr;
+		long val = strtol(argv[i], &endptr, 10);
+		if (endptr == argv[i] || *endptr != '\0' || val < 0)
+		{
+			printf("Argument %d is not a valid number\n", i);
+			return EXIT_FAILURE;
+		}
+	}
 
     //int nbr_threads = atoi(argv[1]);
     write_n_th = atoi(argv[1]);
