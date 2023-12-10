@@ -6,17 +6,22 @@
 #define BUFFER_SIZE 8
 #define MAX_ITEMS 8192
 
-int buffer[BUFFER_SIZE];
-int in = 0, out = 0;
-int produced = 0, consumed = 0;
+static int buffer[BUFFER_SIZE];
+static int in = 0, out = 0;
 
-sem_t empty;
-sem_t full;
-pthread_mutex_t mutex;
+static sem_t empty;
+static sem_t full;
+static pthread_mutex_t mutex;
+
+static int num_producers;
+static int num_consumers;
 
 void* producer(void* arg) {
-    while (produced < MAX_ITEMS) {
+    int produced = 0;
+
+    while (produced < MAX_ITEMS / num_producers) {
         int item = rand() % 100;
+        for (int i = 0; i < 10000; i++);
 
         sem_wait(&empty);
         pthread_mutex_lock(&mutex);
@@ -27,13 +32,18 @@ void* producer(void* arg) {
 
         pthread_mutex_unlock(&mutex);
         sem_post(&full);
+        printf("Produced: %d\n", item);
+        printf("Produit: %d\n", produced);
     }
 
     return NULL;
 }
 
 void* consumer(void* arg) {
-    while (consumed < MAX_ITEMS) {
+    int consumed = 0;
+
+    while (consumed < MAX_ITEMS / num_consumers) {
+        for (int i = 0; i < 10000; i++);
         sem_wait(&full);
         pthread_mutex_lock(&mutex);
 
@@ -46,6 +56,7 @@ void* consumer(void* arg) {
 
         // Modify the way items are consumed
         printf("Consumed: %d\n", item);
+        printf("Consomme: %d\n", consumed);
     }
 
     return NULL;
@@ -54,12 +65,12 @@ void* consumer(void* arg) {
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        print("Insufficient arguments\n");
+        printf("Insufficient arguments\n");
         return -1;
     }
 
-    int num_producers = atoi(argv[1]);
-    int num_consumers = atoi(argv[2]);
+    num_producers = atoi(argv[1]);
+    num_consumers = atoi(argv[2]);
 
     pthread_t producer_threads[num_producers];
     pthread_t consumer_threads[num_consumers];
@@ -79,13 +90,13 @@ int main(int argc, char* argv[]) {
 
     // Create producer and consumer threads
     for (int i = 0; i < num_producers; i++) {
-        if (pthread_create(&producer_threads[i], NULL, producer, NULL) != 0) {
+        if (pthread_create(&producer_threads[i], NULL, &producer, NULL) != 0) {
             perror("Error creating producer thread");
         }
     }
 
     for (int i = 0; i < num_consumers; i++) {
-        if (pthread_create(&consumer_threads[i], NULL, consumer, NULL) != 0) {
+        if (pthread_create(&consumer_threads[i], NULL, &consumer, NULL) != 0) {
             perror("pthread_create consumer");
         }
     }
@@ -99,6 +110,7 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < num_consumers; i++) {
         if (pthread_join(consumer_threads[i], NULL) != 0) {
+            perror("pthread_join consumer");
         }
     }
 
@@ -115,6 +127,6 @@ int main(int argc, char* argv[]) {
         perror("sem empty destroy");
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
