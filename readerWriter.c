@@ -37,6 +37,7 @@ void *writer(void *arg) {
         }
         pthread_mutex_unlock(&mwc);
     }
+    return NULL;
 }
 
 void *reader(void *read) {

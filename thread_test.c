@@ -1,5 +1,7 @@
 #include "test-and-set.h"
 
+//2.1 test
+
 static my_Lock this_lock;
 static int THREADNUM;
 
