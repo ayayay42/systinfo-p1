@@ -14,7 +14,7 @@ typedef struct{
 
 void test_and_set(my_Lock* my_lock){
 	int flag = 1;
-	while (my_lock->lock){
+	while (flag){
 		asm volatile(
 			"xchg %0, %1"
 			: "=r" (flag)
