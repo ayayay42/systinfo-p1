@@ -54,7 +54,7 @@ void* consumer(void* arg) {
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        fprintf(stderr, "Insufficient arguments\n", argv[0]);
+        print("Insufficient arguments\n");
         return -1;
     }
 
@@ -67,7 +67,6 @@ int main(int argc, char* argv[]) {
     // Initialize producer-consumer components
     if (pthread_mutex_init(&mutex, NULL) != 0) {
         perror("Error creating the mutex\n");
-        exit(EXIT_FAILURE);
     }
 
     if (sem_init(&empty, 0 , BUFFER_SIZE) != 0) {
