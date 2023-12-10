@@ -1,6 +1,8 @@
 #!/bin/bash
 make 
 
+#1.4 et 2.2
+
 rm -f perf_measures.csv || true
 
 program_names=("philosophes" "test-and-set") #, "producerConsumer", "readerWriter"}

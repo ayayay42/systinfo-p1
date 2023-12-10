@@ -15,6 +15,8 @@ void mange(int id)
     //Philosophe mange
 }
 
+//1.1
+
 void *philosophe(void *arg)
 {
 
