@@ -19,7 +19,6 @@ for i in range(len(program_names)):
 	#plt.xscale('log', base = 2)
 	#plt.xlim(left=1, right=68)
 	plt.ylabel("temps en s")
-	#plt.ylim(bottom=0, top=20)
 	plt.title("Eval perf pour le programme: " + current)
 
 	current_df = df[df["program"] == current]
@@ -29,4 +28,6 @@ for i in range(len(program_names)):
 	print(grouped_data['time']['std'])
 
 	plt.errorbar(grouped_data.index, grouped_data['time']['mean'], yerr=grouped_data['time']['std'], fmt='-o')
+	max_val = max(grouped_data['time']['mean'])
+	plt.ylim(bottom=0, top=max_val*1.2)
 	plt.savefig("plots/" + current + ".png")
