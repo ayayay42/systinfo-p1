@@ -7,7 +7,7 @@
 #define BUFFER_SIZE 8
 #define MAX_ITEMS 8192
 
-static int buffer[BUFFER_SIZE];
+//static int buffer[BUFFER_SIZE];
 static int in = 0, out = 0;
 
 static my_Sem empty;
@@ -21,20 +21,18 @@ void* producer(void* arg) {
     int produced = 0;
 
     while (produced < MAX_ITEMS / num_producers) {
-        int item = rand() % 100;
+        //int item = rand() % 100;
         for (int i = 0; i < 10000; i++);
 
         sem_wait_function(&empty);
         test_and_test_and_set_lock_function(&mutex);
 
-        buffer[in] = item;
+        //buffer[in] = item;
         in = (in + 1) % BUFFER_SIZE;
         produced++;
 
         unlock_function(&mutex);
         sem_post_function(&full);
-        printf("Produced: %d\n", item);
-        printf("Produit: %d\n", produced);
     }
 
     return NULL;
@@ -48,7 +46,7 @@ void* consumer(void* arg) {
         sem_wait_function(&full);
         test_and_test_and_set_lock_function(&mutex);
 
-        int item = buffer[out];
+        //int item = buffer[out];
         out = (out + 1) % BUFFER_SIZE;
         consumed++;
 
@@ -56,8 +54,6 @@ void* consumer(void* arg) {
         sem_post_function(&empty);
 
         // Modify the way items are consumed
-        printf("Consumed: %d\n", item);
-        printf("Consomme: %d\n", consumed);
     }
 
     return NULL;
