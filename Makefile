@@ -2,14 +2,14 @@ CC = gcc
 CFLAGS = -Wall -Werror 
 
 SRC = $(wildcard *.c)
-OUT = $(SRC:%.c=%)
+OUT = $(SRC:%.c=bin/%)
 SRIPTS = $(wildcard *.sh)
 CSV = $(wildcard *.csv)
 
-SRC = philosophes.c test-and-set.c
+SRC = philosophes.c philosophes-my-functions.c thread_test.c
 all: $(OUT) $(SRIPTS)
 
-%: %.c
+bin/%: %.c
 	$(CC) $(CFLAGS) -o $@ $< -lpthread
 
 clean:
